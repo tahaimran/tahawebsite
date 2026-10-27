@@ -52,6 +52,8 @@ export interface App {
   audience: string;
   /** Google Play link, once the app is live. Until then the page says "Coming soon". */
   playUrl: string | null;
+  /** Play closed-test opt-in link (play.google.com/apps/testing/<package>), shown on /testing/ while testing runs. */
+  testUrl: string | null;
   icon: ImageMetadata;
   feature: ImageMetadata;
   shots: ImageMetadata[];
@@ -77,6 +79,7 @@ export const apps: App[] = [
     category: 'Productivity',
     audience: 'Ages 13+',
     playUrl: null,
+    testUrl: null,
     icon: habitsIcon,
     feature: habitsFeature,
     shots: shots('habits'),
@@ -157,6 +160,7 @@ export const apps: App[] = [
     category: 'Health & Fitness',
     audience: 'Ages 13+',
     playUrl: null,
+    testUrl: null,
     icon: siplingIcon,
     feature: siplingFeature,
     shots: shots('sipling'),
@@ -236,6 +240,7 @@ export const apps: App[] = [
     category: 'Word game',
     audience: 'Adults',
     playUrl: null,
+    testUrl: null,
     icon: wordSearchIcon,
     feature: wordSearchFeature,
     shots: shots('word-search'),
@@ -312,6 +317,7 @@ export const apps: App[] = [
     category: 'Trivia game',
     audience: 'Ages 13+',
     playUrl: null,
+    testUrl: null,
     icon: quizoraIcon,
     feature: quizoraFeature,
     shots: shots('quizora'),
@@ -388,6 +394,7 @@ export const apps: App[] = [
     category: 'Parenting',
     audience: 'Adults (18+)',
     playUrl: null,
+    testUrl: null,
     icon: contractionIcon,
     feature: contractionFeature,
     shots: shots('contraction-timer'),

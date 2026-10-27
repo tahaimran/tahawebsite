@@ -1,0 +1,218 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { apps, appStyle } from '../data/apps';
+import { site } from '../data/site';
+
+const subject = encodeURIComponent('I’d like to test your apps');
+const body = encodeURIComponent(
+  'Hi Taha,\n\nPlease add me as a tester.\n\nThe Google account I use on Play: \nApps I’d like to try (or "all"): \n\nThanks!',
+);
+
+const steps = [
+  {
+    title: 'Send me your Play email',
+    text: 'Email me the Google account you use on the Play Store, and which apps you’d like to try. I add you to the tester list.',
+  },
+  {
+    title: 'Join the test',
+    text: 'Open the "Join the test" link for each app below while signed in to that same account, and tap "Become a tester".',
+  },
+  {
+    title: 'Install from Google Play',
+    text: 'The same page has a link to the app on Google Play. Install it like any other app. It can take a few minutes to show up.',
+  },
+  {
+    title: 'Keep it for 14 days',
+    text: 'Leave the app installed and open it now and then for two weeks. Google counts testers who stay opted in for the whole time.',
+  },
+  {
+    title: 'Tell me what you think',
+    text: 'Anything confusing, broken or missing: email me, or use "Send feedback" inside the app.',
+  },
+];
+---
+
+<Base
+  title="Test my apps | Taha Imran"
+  description="Help test Taha Imran’s Android apps before they launch on Google Play. Join the closed test in a few taps."
+>
+  <div class="wrap page">
+    <h1>Help test my apps before they launch.</h1>
+    <p class="lede">
+      Google asks new developers to run a closed test with at least 12 people for 14 days before an app can go public.
+      If you have an Android phone, you can be one of them. It’s free, and you get the apps early.
+    </p>
+    <a class="button" href={`mailto:${site.email}?subject=${subject}&body=${body}`}>Email me to join</a>
+    <p class="addr">Or write to <a href={`mailto:${site.email}`}>{site.email}</a></p>
+
+    <h2>How it works</h2>
+    <ol class="steps">
+      {
+        steps.map((s) => (
+          <li>
+            <h3>{s.title}</h3>
+            <p>{s.text}</p>
+          </li>
+        ))
+      }
+    </ol>
+
+    <h2>The apps in testing</h2>
+    <ul class="apps">
+      {
+        apps.map((app) => (
+          <li class="app-theme" style={appStyle(app)}>
+            <Image src={app.icon} alt="" width={56} height={56} densities={[1, 2]} />
+            <div class="meta">
+              <a class="name" href={`/apps/${app.slug}/`}>{app.name}</a>
+              <span>{app.title}</span>
+            </div>
+            {app.testUrl ? (
+              <a class="join" href={app.testUrl}>
+                Join the test
+              </a>
+            ) : (
+              <span class="pending">Link coming soon</span>
+            )}
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2>Good to know</h2>
+    <ul class="notes">
+      <li>You need an Android phone with Google Play, signed in to the account you send me.</li>
+      <li>I only use your email to add you to the tester list, and I remove it when testing ends.</li>
+      <li>Test versions are the real apps, ads included. What you enter stays on your phone, as always.</li>
+      <li>You can leave a test any time from the same "Join the test" page.</li>
+    </ul>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding-top: clamp(40px, 7vw, 80px);
+  }
+  h1 {
+    font-size: var(--step-4);
+    font-weight: 750;
+    max-width: 16ch;
+  }
+  .lede {
+    margin: 20px 0 28px;
+    max-width: 48ch;
+  }
+  .addr {
+    margin-top: 14px;
+    color: var(--muted);
+  }
+  h2 {
+    font-size: var(--step-3);
+    margin: clamp(56px, 8vw, 88px) 0 24px;
+  }
+  .steps {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    counter-reset: step;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    gap: 28px;
+  }
+  .steps li {
+    counter-increment: step;
+    padding-top: 16px;
+    border-top: 2px solid var(--ink);
+  }
+  .steps li::before {
+    content: counter(step);
+    font-family: var(--font-display);
+    font-weight: 750;
+    font-size: var(--step-2);
+    line-height: 1;
+  }
+  .steps h3 {
+    margin-top: 12px;
+    font-size: var(--step-1);
+    line-height: 1.2;
+  }
+  .steps p {
+    margin-top: 8px;
+    color: var(--muted);
+  }
+  .apps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 10px;
+    max-width: 44rem;
+  }
+  .apps li {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px 14px;
+    border-radius: var(--radius-m);
+    background: var(--surface);
+    border: 1px solid var(--line);
+  }
+  .apps :global(img) {
+    width: 56px;
+    height: 56px;
+    border-radius: 24%;
+    flex: none;
+  }
+  .meta {
+    display: grid;
+    flex: 1;
+    min-width: 0;
+  }
+  .meta span {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+  .name {
+    color: var(--ink);
+    font-weight: 700;
+    text-decoration: none;
+  }
+  .name:hover {
+    text-decoration: underline;
+  }
+  .join {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: var(--app);
+    color: var(--app-on);
+    font-weight: 600;
+    text-decoration: none;
+    flex: none;
+  }
+  .pending {
+    color: var(--muted);
+    font-size: var(--step--1);
+    font-weight: 600;
+    flex: none;
+  }
+  .notes {
+    margin: 0;
+    padding-left: 1.2em;
+    display: grid;
+    gap: 8px;
+    max-width: 60ch;
+  }
+  @media (max-width: 480px) {
+    .apps li {
+      flex-wrap: wrap;
+    }
+    .join,
+    .pending {
+      margin-left: 70px;
+    }
+  }
+</style>
