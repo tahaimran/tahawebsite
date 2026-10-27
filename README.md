@@ -35,15 +35,11 @@ npm run build     # type-checks, then writes the static site to dist/
 npm run preview   # serves dist/
 ```
 
-## Deploy (Cloudflare Pages, free)
+## Deploy
 
-1. Push this folder to a GitHub repo (for example `tahaimran/tahaimran-website`).
-2. Cloudflare dashboard → Workers & Pages → Create → Pages → connect the repo.
-   Framework preset **Astro**, build command `npm run build`, output folder `dist`.
-3. Custom domains → add `tahaimran.com` (and `www.tahaimran.com`). If the domain's DNS is on Cloudflare
-   this is one click; otherwise point the domain's nameservers to Cloudflare first.
-4. Email Routing (same Cloudflare account) → create `support@tahaimran.com` and forward it to your inbox.
-5. Check `https://tahaimran.com/app-ads.txt` loads as plain text, then in AdMob → Apps → app-ads.txt
-   press "Check for updates" once the apps are live on Play with this website set as the developer website.
+Live at https://www.tahaimran.com/ on **Vercel**, built from the GitHub repo `tahaimran/tahawebsite`.
+Every push to `main` redeploys. `tahaimran.com` redirects to `www.tahaimran.com`, so `site` in `astro.config.mjs`
+and `url` in `src/data/site.ts` use the `www` address (canonical links and the sitemap must match the served host).
 
-GitHub Pages or Netlify work too: any host that serves the `dist/` folder.
+`/app-ads.txt` is served but not linked from any page. After the apps are live on Play with this site as the
+developer website, open AdMob → Apps → app-ads.txt and press "Check for updates".

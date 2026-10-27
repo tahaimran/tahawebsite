@@ -58,4 +58,4 @@ The app is meant for adults (18+). It is not directed to children and we do not 
 We will update this page and its effective date when the app's data practices change (for example if crash reporting is ever added).
 
 ## Contact
-[support@tahaimran.com](mailto:support@tahaimran.com)
+[tahaimran.24@gmail.com](mailto:tahaimran.24@gmail.com)

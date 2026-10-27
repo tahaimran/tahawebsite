@@ -44,4 +44,4 @@ The app is not directed to children under 13 and we do not knowingly collect the
 We will update this page and its effective date when the app's data practices change.
 
 ## Contact
-[support@tahaimran.com](mailto:support@tahaimran.com)
+[tahaimran.24@gmail.com](mailto:tahaimran.24@gmail.com)

@@ -47,4 +47,4 @@ The app is made for adults. It is not directed to children and we do not knowing
 We will update this page and its effective date when the app's data practices change.
 
 ## Contact
-[support@tahaimran.com](mailto:support@tahaimran.com)
+[tahaimran.24@gmail.com](mailto:tahaimran.24@gmail.com)

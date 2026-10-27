@@ -3,7 +3,7 @@ import { defineConfig } from 'astro/config';
 import sitemap from '@astrojs/sitemap';
 
 export default defineConfig({
-  site: 'https://tahaimran.com',
+  site: 'https://www.tahaimran.com',
   trailingSlash: 'always',
   integrations: [sitemap()],
 });
