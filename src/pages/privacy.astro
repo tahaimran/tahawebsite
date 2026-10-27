@@ -1,0 +1,100 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import Prose from '../components/Prose.astro';
+import { apps } from '../data/apps';
+import { site } from '../data/site';
+---
+
+<Base title="Privacy | Taha Imran" description="Privacy policies for Taha Imran’s Android apps, and how this website handles your visit.">
+  <div class="wrap page">
+    <h1>Privacy</h1>
+    <p class="lede">
+      None of my apps has an account or a server. What you enter stays on your phone. Each app’s policy explains what
+      the Google AdMob ads collect and how to change your ad choices.
+    </p>
+
+    <h2>App privacy policies</h2>
+    <ul class="policies">
+      {
+        apps.map((app) => (
+          <li>
+            <a href={`/apps/${app.slug}/privacy/`}>
+              <Image src={app.icon} alt="" width={48} height={48} densities={[1, 2]} />
+              <span>
+                <strong>{app.name}</strong>
+                <span class="title">{app.title}</span>
+              </span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2 id="website">This website</h2>
+    <Prose>
+      <p>
+        tahaimran.com has no cookies, no analytics, no ads and no forms, and its fonts are served from this site. Like
+        any website, the company that hosts it keeps standard server logs (such as your IP address, browser and the
+        pages you open) for a short time to keep the site running and secure. I don’t use those logs to identify you.
+      </p>
+      <p>
+        If you email me, I use your message and address only to reply. Questions? Write to
+        <a href={`mailto:${site.email}`}>{site.email}</a>.
+      </p>
+    </Prose>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding-top: clamp(40px, 7vw, 80px);
+  }
+  h1 {
+    font-size: var(--step-4);
+    font-weight: 750;
+  }
+  .lede {
+    margin-top: 18px;
+    max-width: 48ch;
+  }
+  h2 {
+    font-size: var(--step-2);
+    margin: 56px 0 18px;
+  }
+  .policies {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 300px), 1fr));
+    gap: 12px;
+  }
+  .policies a {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 12px;
+    border-radius: var(--radius-m);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    text-decoration: none;
+  }
+  .policies a:hover {
+    border-color: var(--ink);
+  }
+  .policies :global(img) {
+    width: 48px;
+    height: 48px;
+    border-radius: 24%;
+    flex: none;
+  }
+  .policies span {
+    display: grid;
+  }
+  .title {
+    color: var(--muted);
+    font-size: var(--step--1);
+  }
+</style>

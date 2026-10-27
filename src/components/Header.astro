@@ -1,0 +1,86 @@
+---
+import { apps } from '../data/apps';
+
+const path = Astro.url.pathname;
+const links = [
+  { href: '/#apps', label: 'Apps', current: path.startsWith('/apps/') },
+  { href: '/support/', label: 'Support', current: path === '/support/' },
+  { href: '/privacy/', label: 'Privacy', current: path === '/privacy/' },
+];
+---
+
+<header class="site-header">
+  <div class="stripe" aria-hidden="true">
+    {apps.map((app) => <span style={`background:${app.colors.light}`} />)}
+  </div>
+  <div class="wrap bar">
+    <a class="mark" href="/" aria-label="Taha Imran, home">Taha Imran</a>
+    <nav aria-label="Main">
+      <ul>
+        {
+          links.map((l) => (
+            <li>
+              <a href={l.href} aria-current={l.current ? 'page' : undefined}>
+                {l.label}
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<style>
+  .stripe {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    height: 4px;
+  }
+  .bar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+    min-height: 68px;
+  }
+  .mark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 1.25rem;
+    letter-spacing: -0.02em;
+    white-space: nowrap;
+    color: var(--ink);
+    text-decoration: none;
+  }
+  ul {
+    display: flex;
+    gap: 4px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  nav a {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 12px;
+    border-radius: 999px;
+    color: var(--muted);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  nav a:hover,
+  nav a[aria-current='page'] {
+    color: var(--ink);
+    background: var(--surface);
+  }
+  @media (max-width: 420px) {
+    nav a {
+      padding: 0 8px;
+    }
+    .mark {
+      font-size: 1.1rem;
+    }
+  }
+</style>

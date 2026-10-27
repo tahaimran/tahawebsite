@@ -1,0 +1,85 @@
+---
+import { Image } from 'astro:assets';
+import { apps } from '../data/apps';
+---
+
+<!-- The five real launcher icons on a phone-wallpaper panel, each a link to its app page. -->
+<nav class="home-screen" aria-label="The five apps">
+  <ul>
+    {
+      apps.map((app, i) => (
+        <li style={`--i:${i}`}>
+          <a href={`/apps/${app.slug}/`}>
+            <Image src={app.icon} alt="" width={120} height={120} densities={[1, 2]} loading="eager" class="icon" />
+            <span>{app.name}</span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+</nav>
+
+<style>
+  .home-screen {
+    position: relative;
+    border-radius: var(--radius-l);
+    padding: clamp(28px, 5vw, 48px) clamp(18px, 4vw, 40px);
+    background:
+      radial-gradient(120% 90% at 0% 0%, var(--wall-1), transparent 60%),
+      radial-gradient(90% 90% at 100% 20%, var(--wall-2), transparent 60%),
+      radial-gradient(100% 80% at 50% 110%, var(--wall-3), transparent 65%),
+      var(--surface);
+    box-shadow: var(--shadow);
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    --col-gap: clamp(10px, 3vw, 28px);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(20px, 4vw, 36px) var(--col-gap);
+  }
+  /* Three per row; the last two sit centred under them, like a launcher page. */
+  li {
+    flex: 0 0 calc((100% - 2 * var(--col-gap)) / 3);
+    display: flex;
+    justify-content: center;
+    animation: settle 0.5s cubic-bezier(0.2, 0.9, 0.3, 1.25) both;
+    animation-delay: calc(var(--i) * 70ms + 120ms);
+  }
+  a {
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    width: clamp(84px, 18vw, 120px);
+    color: var(--ink);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: clamp(0.82rem, 0.75rem + 0.3vw, 0.95rem);
+    line-height: 1.2;
+    text-align: center;
+  }
+  .icon {
+    width: 100%;
+    height: auto;
+    border-radius: 24%;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.08), 0 12px 24px -10px rgb(0 0 0 / 0.35);
+    transition: transform 0.2s ease;
+  }
+  a:hover .icon,
+  a:focus-visible .icon {
+    transform: translateY(-4px) scale(1.03);
+  }
+  @keyframes settle {
+    from {
+      opacity: 0;
+      scale: 0.6;
+    }
+    to {
+      opacity: 1;
+      scale: 1;
+    }
+  }
+</style>

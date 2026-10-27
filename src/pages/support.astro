@@ -1,0 +1,165 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import { apps } from '../data/apps';
+import { site } from '../data/site';
+
+const answers = [
+  {
+    q: 'Reminders don’t arrive on time',
+    a: 'Some phones (often Xiaomi, Samsung, OnePlus and Huawei) pause apps to save battery. In Android settings, open Apps, pick the app, open Battery and allow it to run in the background. Also check that the app’s notifications are turned on.',
+  },
+  {
+    q: 'How do I change my ad choices?',
+    a: 'Each app has a Privacy choices option in its settings, where the law requires one. You can also reset your advertising ID or turn off personalised ads in Android settings, under Privacy, then Ads.',
+  },
+  {
+    q: 'How do I delete my data?',
+    a: 'Your data only exists on your phone, so uninstalling the app deletes it. Word Search and Quizora also have Reset progress in Settings, and Contraction Timer has Delete all data under More.',
+  },
+  {
+    q: 'Can I move my data to a new phone?',
+    a: 'Habits and Sipling can export a backup file from Settings, which you can import on the new phone. The other apps keep progress only on the phone you use.',
+  },
+];
+---
+
+<Base title="Support | Taha Imran" description="Get help with Habits, Sipling, Word Search, Quizora or Contraction Timer.">
+  <div class="wrap page">
+    <h1>Support</h1>
+    <div class="email">
+      <p>Write to me at</p>
+      <a href={`mailto:${site.email}`}>{site.email}</a>
+      <p class="tip">
+        Tell me which app, your phone model and Android version, and what happened.
+      </p>
+    </div>
+
+    <h2>Help for each app</h2>
+    <ul class="apps">
+      {
+        apps.map((app) => (
+          <li>
+            <a href={`/apps/${app.slug}/#help`}>
+              <Image src={app.icon} alt="" width={48} height={48} densities={[1, 2]} />
+              <span>{app.name}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+
+    <h2>Common questions</h2>
+    <div class="faq">
+      {
+        answers.map((item) => (
+          <details>
+            <summary>{item.q}</summary>
+            <p>{item.a}</p>
+          </details>
+        ))
+      }
+    </div>
+  </div>
+</Base>
+
+<style>
+  .page {
+    padding-top: clamp(40px, 7vw, 80px);
+  }
+  h1 {
+    font-size: var(--step-4);
+    font-weight: 750;
+  }
+  .email {
+    margin-top: 28px;
+    padding: clamp(24px, 4vw, 40px);
+    border-radius: var(--radius-l);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    max-width: 44rem;
+  }
+  .email > a {
+    display: inline-block;
+    margin-top: 4px;
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-3);
+    line-height: 1.15;
+    overflow-wrap: anywhere;
+    color: var(--ink);
+  }
+  .tip {
+    margin-top: 16px;
+    color: var(--muted);
+    max-width: 52ch;
+  }
+  h2 {
+    font-size: var(--step-2);
+    margin: 56px 0 18px;
+  }
+  .apps {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .apps a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 18px 8px 8px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .apps a:hover {
+    border-color: var(--ink);
+  }
+  .apps :global(img) {
+    width: 44px;
+    height: 44px;
+    border-radius: 24%;
+  }
+  .faq {
+    display: grid;
+    border-top: 1px solid var(--line);
+    max-width: 64ch;
+  }
+  details {
+    border-bottom: 1px solid var(--line);
+  }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    min-height: 56px;
+    padding-block: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: '+';
+    flex: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    transition: transform 0.2s ease;
+  }
+  details[open] summary::after {
+    transform: rotate(45deg);
+  }
+  details p {
+    padding-bottom: 18px;
+    color: var(--muted);
+  }
+</style>

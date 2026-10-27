@@ -1,0 +1,115 @@
+---
+import { Image } from 'astro:assets';
+import type { App } from '../data/apps';
+
+interface Props {
+  app: App;
+}
+
+const { app } = Astro.props;
+---
+
+<div class="shots" data-shots>
+  <div class="controls">
+    <button type="button" data-dir="-1" aria-label="Previous screenshots">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7" /></svg>
+    </button>
+    <button type="button" data-dir="1" aria-label="Next screenshots">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7" /></svg>
+    </button>
+  </div>
+  <ul class="track" tabindex="0" role="region" aria-label={`${app.name} screenshots, scroll sideways`}>
+    {
+      app.shots.map((shot, i) => (
+        <li>
+          <Image
+            src={shot}
+            alt={app.shotAlts[i] ?? `${app.name} screenshot ${i + 1}`}
+            widths={[270, 540]}
+            sizes="(max-width: 436px) 62vw, 270px"
+            loading={i < 3 ? 'eager' : 'lazy'}
+          />
+        </li>
+      ))
+    }
+  </ul>
+</div>
+
+<script>
+  // Prev / next move the strip by one screen's worth; the strip also scrolls by touch, wheel and arrow keys.
+  for (const root of document.querySelectorAll<HTMLElement>('[data-shots]')) {
+    const track = root.querySelector<HTMLElement>('.track')!;
+    const [prev, next] = root.querySelectorAll<HTMLButtonElement>('button');
+    const update = () => {
+      prev.disabled = track.scrollLeft < 4;
+      next.disabled = track.scrollLeft + track.clientWidth > track.scrollWidth - 4;
+    };
+    for (const b of [prev, next]) {
+      b.addEventListener('click', () => {
+        const smooth = !matchMedia('(prefers-reduced-motion: reduce)').matches;
+        track.scrollBy({ left: Number(b.dataset.dir) * track.clientWidth * 0.8, behavior: smooth ? 'smooth' : 'auto' });
+      });
+    }
+    track.addEventListener('scroll', update, { passive: true });
+    addEventListener('resize', update);
+    update();
+  }
+</script>
+
+<style>
+  .shots {
+    position: relative;
+  }
+  .controls {
+    display: flex;
+    justify-content: flex-end;
+    gap: 8px;
+    margin-bottom: 14px;
+  }
+  button {
+    display: grid;
+    place-items: center;
+    width: 48px;
+    height: 48px;
+    border-radius: 999px;
+    border: 1px solid var(--line);
+    background: var(--surface);
+    color: var(--ink);
+    cursor: pointer;
+  }
+  button:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+  svg {
+    width: 22px;
+    height: 22px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 2.4;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+  .track {
+    display: flex;
+    gap: 16px;
+    margin: 0;
+    padding: 4px 4px 18px;
+    list-style: none;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 4px;
+    overscroll-behavior-x: contain;
+    border-radius: var(--radius-m);
+  }
+  li {
+    flex: 0 0 auto;
+    scroll-snap-align: start;
+  }
+  img {
+    width: min(270px, 62vw);
+    aspect-ratio: 9 / 16;
+    border-radius: var(--radius-m);
+    box-shadow: var(--shadow);
+  }
+</style>

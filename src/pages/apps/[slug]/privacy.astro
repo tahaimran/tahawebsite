@@ -1,0 +1,92 @@
+---
+import { Image } from 'astro:assets';
+import { getEntry, render } from 'astro:content';
+import Base from '../../../layouts/Base.astro';
+import Prose from '../../../components/Prose.astro';
+import { apps, appStyle, type App } from '../../../data/apps';
+import { site, formatDate } from '../../../data/site';
+
+export function getStaticPaths() {
+  return apps.map((app) => ({ params: { slug: app.slug }, props: { app } }));
+}
+
+interface Props {
+  app: App;
+}
+
+const { app } = Astro.props;
+const entry = await getEntry('privacy', app.slug);
+if (!entry) throw new Error(`Missing privacy policy: src/content/privacy/${app.slug}.md`);
+const { Content } = await render(entry);
+---
+
+<Base title={`Privacy policy: ${app.title}`} description={`How ${app.name} handles your data: what stays on your phone and what the ads collect.`}>
+  <div class="app-theme" style={appStyle(app)}>
+    <header class="head">
+      <div class="wrap">
+        <a class="back" href={`/apps/${app.slug}/`}>
+          <Image src={app.icon} alt="" width={40} height={40} densities={[1, 2]} />
+          <span>{app.name}</span>
+        </a>
+        <h1>Privacy policy</h1>
+        <p class="for">{entry.data.title}</p>
+        <dl class="meta">
+          <div><dt>Effective</dt><dd><time datetime={site.policyDate}>{formatDate(site.policyDate)}</time></dd></div>
+          <div><dt>Developer</dt><dd>{site.name}</dd></div>
+          <div><dt>Contact</dt><dd><a href={`mailto:${site.email}`}>{site.email}</a></dd></div>
+        </dl>
+      </div>
+    </header>
+    <div class="wrap body">
+      <Prose><Content /></Prose>
+    </div>
+  </div>
+</Base>
+
+<style>
+  .head {
+    background: var(--app-soft);
+    padding-block: 36px 40px;
+  }
+  .back {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 44px;
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .back :global(img) {
+    width: 40px;
+    height: 40px;
+    border-radius: 24%;
+  }
+  h1 {
+    margin-top: 24px;
+    font-size: var(--step-4);
+    font-weight: 750;
+  }
+  .for {
+    margin-top: 8px;
+    font-size: var(--step-1);
+    color: var(--muted);
+  }
+  .meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px 40px;
+    margin: 28px 0 0;
+  }
+  .meta dt {
+    font-size: var(--step--1);
+    color: var(--muted);
+  }
+  .meta dd {
+    margin: 2px 0 0;
+    font-weight: 600;
+  }
+  .body {
+    padding-top: 48px;
+  }
+</style>

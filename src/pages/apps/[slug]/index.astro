@@ -1,0 +1,369 @@
+---
+import { Image, getImage } from 'astro:assets';
+import Base from '../../../layouts/Base.astro';
+import Screenshots from '../../../components/Screenshots.astro';
+import { apps, appStyle, type App } from '../../../data/apps';
+import { site } from '../../../data/site';
+
+export function getStaticPaths() {
+  return apps.map((app) => ({ params: { slug: app.slug }, props: { app } }));
+}
+
+interface Props {
+  app: App;
+}
+
+const { app } = Astro.props;
+const others = apps.filter((a) => a.slug !== app.slug);
+const og = await getImage({ src: app.feature, width: 1024, format: 'png' });
+
+const facts = [
+  ['Category', app.category],
+  ['For', app.audience],
+  ['Price', 'Free, with ads'],
+  ['Account', 'Not needed'],
+  ['Internet', 'Not needed'],
+];
+---
+
+<Base title={`${app.title} | Taha Imran`} description={app.tagline} image={og.src}>
+  <div class="app-theme" style={appStyle(app)}>
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div>
+          <Image src={app.icon} alt="" width={112} height={112} densities={[1, 2]} loading="eager" class="icon" />
+          <h1>{app.name}</h1>
+          <p class="store-title">{app.title}</p>
+          <p class="intro">{app.intro}</p>
+          {
+            app.playUrl ? (
+              <a class="button play" href={app.playUrl}>
+                Get it on Google Play
+              </a>
+            ) : (
+              <p class="soon">Coming soon to Google Play</p>
+            )
+          }
+        </div>
+        <dl class="facts">
+          {
+            facts.map(([k, v]) => (
+              <div>
+                <dt>{k}</dt>
+                <dd>{v}</dd>
+              </div>
+            ))
+          }
+        </dl>
+      </div>
+    </section>
+
+    <section class="wrap block" aria-labelledby="shots-title">
+      <h2 id="shots-title">Screenshots</h2>
+      <Screenshots app={app} />
+    </section>
+
+    <section class="wrap block" aria-labelledby="features-title">
+      <h2 id="features-title">What it does</h2>
+      <div class="features">
+        {
+          app.features.map((f) => (
+            <div class="feature">
+              <h3>{f.title}</h3>
+              <ul>
+                {f.points.map((p) => (
+                  <li>{p}</li>
+                ))}
+              </ul>
+            </div>
+          ))
+        }
+      </div>
+      {app.notice && <p class="notice">{app.notice}</p>}
+    </section>
+
+    <section class="wrap block split" aria-labelledby="privacy-title">
+      <h2 id="privacy-title">Your privacy</h2>
+      <div>
+        <ul class="checks">
+          {app.privacy.map((p) => <li>{p}</li>)}
+        </ul>
+        <a class="more" href={`/apps/${app.slug}/privacy/`}>Read the full privacy policy</a>
+      </div>
+    </section>
+
+    <section id="help" class="wrap block split" aria-labelledby="help-title">
+      <h2 id="help-title">Help</h2>
+      <div>
+        <div class="faq">
+          {
+            app.faq.map((item) => (
+              <details>
+                <summary>{item.q}</summary>
+                <p>{item.a}</p>
+              </details>
+            ))
+          }
+        </div>
+        <p class="contact">
+          Still stuck? Email <a href={`mailto:${site.email}?subject=${encodeURIComponent(app.name)}`}>{site.email}</a>
+          with your phone model and Android version.
+        </p>
+      </div>
+    </section>
+  </div>
+
+  <section class="wrap block" aria-labelledby="more-title">
+    <h2 id="more-title">More apps</h2>
+    <ul class="others">
+      {
+        others.map((o) => (
+          <li>
+            <a href={`/apps/${o.slug}/`}>
+              <Image src={o.icon} alt="" width={64} height={64} densities={[1, 2]} loading="lazy" />
+              <span>{o.name}</span>
+            </a>
+          </li>
+        ))
+      }
+    </ul>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    background: var(--app-soft);
+    padding-block: clamp(40px, 7vw, 88px);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 40px 64px;
+    align-items: end;
+  }
+  .icon {
+    width: 112px;
+    height: 112px;
+    border-radius: 24%;
+    box-shadow: 0 2px 4px rgb(0 0 0 / 0.08), 0 16px 32px -14px rgb(0 0 0 / 0.45);
+  }
+  h1 {
+    margin-top: 28px;
+    font-size: var(--step-4);
+    font-weight: 750;
+  }
+  .store-title {
+    margin-top: 8px;
+    font-weight: 600;
+    color: var(--muted);
+  }
+  .intro {
+    margin-top: 20px;
+    font-size: var(--step-1);
+    line-height: 1.45;
+    max-width: 40ch;
+  }
+  .play {
+    margin-top: 28px;
+    background: var(--app);
+    color: var(--app-on);
+  }
+  .soon {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    margin-top: 28px;
+    min-height: 44px;
+    padding: 0 18px;
+    border-radius: 999px;
+    border: 1.5px dashed var(--app);
+    font-weight: 600;
+  }
+  .facts {
+    margin: 0;
+    display: grid;
+    border-top: 1.5px solid var(--ink);
+  }
+  .facts div {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    padding-block: 12px;
+    border-bottom: 1px solid color-mix(in srgb, var(--ink) 18%, transparent);
+  }
+  .facts dt {
+    color: var(--muted);
+  }
+  .facts dd {
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+  }
+
+  .block {
+    margin-top: clamp(56px, 8vw, 96px);
+  }
+  .block > h2,
+  .split > h2 {
+    font-size: var(--step-3);
+    margin-bottom: 24px;
+  }
+
+  .features {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 40px 40px;
+  }
+  .feature {
+    padding-top: 16px;
+    border-top: 3px solid var(--app);
+  }
+  .feature h3 {
+    font-size: var(--step-1);
+    line-height: 1.2;
+  }
+  .feature ul {
+    margin: 12px 0 0;
+    padding-left: 1.1em;
+    color: var(--muted);
+    display: grid;
+    gap: 6px;
+  }
+  .feature li::marker {
+    color: var(--app);
+  }
+  .notice {
+    margin-top: 40px;
+    padding: 18px 22px;
+    border-radius: var(--radius-m);
+    background: var(--app-soft);
+    max-width: 70ch;
+    font-weight: 500;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 16px 48px;
+  }
+  .split > h2 {
+    margin: 0;
+  }
+  .checks {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 12px;
+    max-width: 60ch;
+  }
+  .checks li {
+    position: relative;
+    padding-left: 34px;
+  }
+  .checks li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.3em;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--app)
+      url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20'%3E%3Cpath d='M5.5 10.5l3 3 6-7' fill='none' stroke='white' stroke-width='2.4' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E")
+      center / contain no-repeat;
+  }
+  .more {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    margin-top: 12px;
+    font-weight: 600;
+  }
+
+  .faq {
+    display: grid;
+    border-top: 1px solid var(--line);
+    max-width: 64ch;
+  }
+  details {
+    border-bottom: 1px solid var(--line);
+  }
+  summary {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+    min-height: 56px;
+    padding-block: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    list-style: none;
+  }
+  summary::-webkit-details-marker {
+    display: none;
+  }
+  summary::after {
+    content: '+';
+    flex: none;
+    font-size: 1.5rem;
+    line-height: 1;
+    color: var(--app);
+    transition: transform 0.2s ease;
+  }
+  details[open] summary::after {
+    transform: rotate(45deg);
+  }
+  details p {
+    padding-bottom: 18px;
+    color: var(--muted);
+  }
+  .contact {
+    margin-top: 20px;
+    color: var(--muted);
+  }
+
+  .others {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  .others a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 8px 18px 8px 8px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    color: var(--ink);
+    font-weight: 600;
+    text-decoration: none;
+  }
+  .others a:hover {
+    border-color: var(--ink);
+  }
+  .others :global(img) {
+    width: 44px;
+    height: 44px;
+    border-radius: 24%;
+  }
+
+  @media (max-width: 860px) {
+    .hero-grid,
+    .split {
+      grid-template-columns: 1fr;
+    }
+    .features {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+  }
+  @media (max-width: 560px) {
+    .features {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

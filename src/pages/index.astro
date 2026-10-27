@@ -1,0 +1,291 @@
+---
+import { Image } from 'astro:assets';
+import Base from '../layouts/Base.astro';
+import HomeScreen from '../components/HomeScreen.astro';
+import { apps, appStyle } from '../data/apps';
+import { site } from '../data/site';
+
+const principles = [
+  {
+    title: 'No account',
+    text: 'You never sign up or log in. Open the app and start.',
+  },
+  {
+    title: 'Your data stays on your phone',
+    text: 'There is no server behind these apps. What you enter is saved on your device, and only you decide to back it up or share it.',
+  },
+  {
+    title: 'Ads, kept in their place',
+    text: 'The apps are free to download and paid for by ads from Google AdMob. Ads never cover the main button and stay out of the way while you are in the middle of something.',
+  },
+  {
+    title: 'Easy to read',
+    text: 'Every app follows your phone’s text size, works with TalkBack and has a dark mode. Word Search goes up to extra-large letters.',
+  },
+];
+---
+
+<Base title="Taha Imran: small Android apps that keep your data on your phone">
+  <section class="hero wrap">
+    <div class="hero-text">
+      <h1>Small Android apps that keep your data on your phone.</h1>
+      <p class="lede">
+        I’m Taha Imran. I design and build these five apps myself. None of them asks for an account, all of them work
+        offline, and they’re free to download.
+      </p>
+      <div class="actions">
+        <a class="button" href="#apps">See the apps</a>
+        <a class="quiet" href="/support/">Get help with an app</a>
+      </div>
+    </div>
+    <HomeScreen />
+  </section>
+
+  <section id="apps" class="wrap apps" aria-labelledby="apps-title">
+    <h2 id="apps-title">The apps</h2>
+    <ol class="app-list">
+      {
+        apps.map((app, i) => (
+          <li class="app-row app-theme" style={appStyle(app)} data-flip={i % 2 === 1 ? '' : undefined}>
+            <div class="row-text">
+              <div class="row-head">
+                <Image src={app.icon} alt="" width={72} height={72} densities={[1, 2]} class="row-icon" />
+                <div>
+                  <h3>{app.name}</h3>
+                  <p class="store-title">{app.title}</p>
+                </div>
+              </div>
+              <p class="row-intro">{app.intro}</p>
+              <ul class="tags" aria-label="Highlights">
+                {app.highlights.map((h) => (
+                  <li>{h}</li>
+                ))}
+              </ul>
+              <a class="button app-button" href={`/apps/${app.slug}/`}>
+                About {app.name}
+              </a>
+            </div>
+            <div class="row-shots" aria-hidden="true">
+              {[0, 2, 4].map((n) => (
+                <Image src={app.shots[n]} alt="" widths={[180, 360]} sizes="180px" loading="lazy" />
+              ))}
+            </div>
+          </li>
+        ))
+      }
+    </ol>
+  </section>
+
+  <section class="wrap principles" aria-labelledby="principles-title">
+    <h2 id="principles-title">How I make them</h2>
+    <dl>
+      {
+        principles.map((p) => (
+          <div>
+            <dt>{p.title}</dt>
+            <dd>{p.text}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </section>
+
+  <section class="wrap about" aria-labelledby="about-title">
+    <h2 id="about-title">About me</h2>
+    <div class="about-text">
+      <p>
+        I’m an independent developer. I build each app from start to finish: the design, the code, the Play Store
+        listing and the answers to your emails.
+      </p>
+      <p>
+        If something doesn’t work the way you expect, or you have an idea, write to me at
+        <a href={`mailto:${site.email}`}>{site.email}</a>.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    display: grid;
+    grid-template-columns: 1.05fr 1fr;
+    align-items: center;
+    gap: clamp(32px, 6vw, 80px);
+    padding-block: clamp(40px, 8vw, 96px) clamp(48px, 8vw, 96px);
+  }
+  h1 {
+    font-size: var(--step-4);
+    font-weight: 750;
+    max-width: 14ch;
+  }
+  .lede {
+    margin-top: 22px;
+  }
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 12px 24px;
+    margin-top: 32px;
+  }
+  .quiet {
+    display: inline-flex;
+    align-items: center;
+    min-height: 48px;
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .apps > h2,
+  .principles > h2,
+  .about > h2 {
+    font-size: var(--step-3);
+    margin-bottom: 28px;
+  }
+  .app-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: 20px;
+  }
+  .app-row {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    align-items: center;
+    gap: 32px;
+    padding: clamp(22px, 4vw, 40px);
+    border-radius: var(--radius-l);
+    background: var(--app-soft);
+    overflow: hidden;
+  }
+  .app-row[data-flip] .row-shots {
+    order: -1;
+  }
+  .row-head {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+  .row-icon {
+    width: 72px;
+    height: 72px;
+    border-radius: 24%;
+    box-shadow: 0 8px 20px -10px rgb(0 0 0 / 0.4);
+  }
+  h3 {
+    font-size: var(--step-2);
+  }
+  .store-title {
+    color: var(--muted);
+    font-size: var(--step--1);
+    font-weight: 600;
+    margin-top: 4px;
+  }
+  .row-intro {
+    margin-top: 18px;
+    max-width: 52ch;
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    list-style: none;
+    margin: 18px 0 24px;
+    padding: 0;
+  }
+  .tags li {
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: var(--surface);
+    font-size: var(--step--1);
+    font-weight: 600;
+  }
+  .app-button {
+    background: var(--app);
+    color: var(--app-on);
+  }
+  .row-shots {
+    display: flex;
+    gap: 12px;
+    align-items: flex-end;
+  }
+  .row-shots :global(img) {
+    width: 150px;
+    aspect-ratio: 9 / 16;
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+  }
+  .row-shots :global(img:nth-child(2)) {
+    margin-bottom: 22px;
+  }
+
+  .principles {
+    margin-top: clamp(64px, 10vw, 112px);
+  }
+  dl {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 36px 48px;
+    margin: 0;
+  }
+  dl div {
+    padding-top: 18px;
+    border-top: 2px solid var(--ink);
+  }
+  dt {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: var(--step-1);
+    line-height: 1.2;
+  }
+  dd {
+    margin: 10px 0 0;
+    color: var(--muted);
+    max-width: 46ch;
+  }
+
+  .about {
+    margin-top: clamp(64px, 10vw, 112px);
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 2fr);
+    gap: 24px 48px;
+  }
+  .about > h2 {
+    margin: 0;
+  }
+  .about-text {
+    display: grid;
+    gap: 14px;
+    font-size: var(--step-1);
+    line-height: 1.5;
+    max-width: 40ch;
+  }
+
+  @media (max-width: 1000px) {
+    .row-shots :global(img) {
+      width: 120px;
+    }
+  }
+  @media (max-width: 860px) {
+    .hero {
+      grid-template-columns: 1fr;
+    }
+    .app-row {
+      grid-template-columns: 1fr;
+    }
+    .app-row[data-flip] .row-shots {
+      order: 0;
+    }
+    .row-shots {
+      justify-content: center;
+    }
+    .row-shots :global(img) {
+      width: min(30%, 150px);
+    }
+    dl,
+    .about {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
